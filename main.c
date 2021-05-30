@@ -39,8 +39,13 @@ void newNode(Node* node){ // create new node
     node->rlink = NULL;
 }
 
-void addExistNode(Node* node, Node* exist){
-    node = exist;
+void print(Node* node){
+    if(node != NULL){
+        printf("%s%s", ctypes[node->shape], ntypes[node->num]);
+        print(node->llink);
+        print(node->rlink);
+    }
+    return;
 }
 
 void init_card(){
@@ -58,7 +63,8 @@ void init_card(){
     newNode(root->llink->rlink->rlink);
     root->rlink->rlink->llink = root->llink->rlink->rlink;
     newNode(root->rlink->rlink->rlink);
-    
+
+    print(root);
 }
 
 void main(){
