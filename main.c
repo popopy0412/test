@@ -67,15 +67,6 @@ Node* newNode(Node* node, int shape, int number){ // create new node
     node->rlink = NULL;
 }
 
-/*void print(Node* node){
-    if(node != NULL){
-        printf("%s %s", card_shapes[node->shape], card_numbers[node->num]);
-        print(node->llink);
-        print(node->rlink);
-    }
-    return;
-}*/
-
 void init_card(){
 	for(int i=0;i<10;i++){
 		while(1){
@@ -110,7 +101,6 @@ void reset_board(){
 	for(int i=0;i<NUM_OF_REST_CARDS;i++){
 		push_card(rest_cards[i]);
 	}
-    //print(root);
 }
 
 void shuffle(){
