@@ -17,11 +17,9 @@ typedef struct Node{
 }Node;
 
 
-
-Node* root; // root node of tree
 Node* tree[10]; // card tree
-const char* ctypes[NUM_SHAPE] = {"♠", "♥", "♣","◆" };
-const char* ntypes[CARD_NUM] = {"A","2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+const char* card_shapes[NUM_SHAPE] = {"♠", "♥", "♣","◆" };
+const char* card_numbers[CARD_NUM] = {"A","2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 int mark[4][13]; // randomly pick cards
 int shapes[11], numbers[11]; // shapes and numbers of picked cards
 int rest_cards[50];
@@ -36,22 +34,27 @@ int hasChild(Node* node); // check the node has child
 void push_card(int card); // push card into deck
 int pop_card(); // pop card from deck
 void printCard(Node* node); // print Card in board
+void checkCanShow(Node* node); // check card can show
 void show_board(); // show board
+void play(); // play the game
 
 void main(){
 	srand((unsigned)time(NULL));
-	
+
 	init_card();
 	reset_board();
 	
 	while(1){
 		show_board();
-		/*if(){
-			pop_card(); // if no more card to play(empty stack), you lose
+		play();
+		if(top == 0){ // if there is no card
+			printf("You lose.\n");
+			break;
 		}
-		if(all cards removed){
-			printf("\n You Win.\n");
-		}*/
+		else if(tree[0]->show == -1){ // if all card is removed
+			printf("You Win.\n");
+			break;
+		}
 	}
 }
 
@@ -66,7 +69,7 @@ Node* newNode(Node* node, int shape, int number){ // create new node
 
 /*void print(Node* node){
     if(node != NULL){
-        printf("%s %s", ctypes[node->shape], ntypes[node->num]);
+        printf("%s %s", card_shapes[node->shape], card_numbers[node->num]);
         print(node->llink);
         print(node->rlink);
     }
@@ -85,30 +88,27 @@ void init_card(){
 			break;
 		}
 	}
-	
 }
 
 void reset_board(){
-    tree[0] = root                      = newNode(root, shapes[0], numbers[0]); // L1
-	tree[1] = root->llink               = newNode(root->llink, shapes[1], numbers[1]); // L2
-    tree[2] = root->rlink               = newNode(root->rlink, shapes[2], numbers[2]);
-	tree[3] = root->llink->llink        = newNode((root->llink)->llink, shapes[3], numbers[3]); // L3
-    tree[4] = root->llink->rlink        = newNode(root->llink->rlink, shapes[4], numbers[4]);
-    root->rlink->llink                  = root->llink->rlink;
-    tree[5] = root->rlink->rlink        = newNode(root->rlink->rlink, shapes[5], numbers[5]);
-    tree[6] = root->llink->llink->llink = newNode(root->llink->llink->llink, shapes[6], numbers[6]); // L4
-    tree[7] = root->llink->llink->rlink = newNode(root->llink->llink->rlink, shapes[7], numbers[7]);
-    root->llink->rlink->llink           = root->llink->llink->rlink;
-    tree[8] = root->llink->rlink->rlink = newNode(root->llink->rlink->rlink, shapes[8], numbers[8]);
-    root->rlink->rlink->llink           = root->llink->rlink->rlink;
-    tree[9] = root->rlink->rlink->rlink = newNode(root->rlink->rlink->rlink, shapes[9], numbers[9]); // make tree. Done.
+    tree[0]                  = newNode(tree[0], shapes[0], numbers[0]); // L1
+	tree[1] = tree[0]->llink = newNode(tree[0]->llink, shapes[1], numbers[1]); // L2
+    tree[2] = tree[0]->rlink = newNode(tree[0]->rlink, shapes[2], numbers[2]);
+	tree[3] = tree[1]->llink = newNode(tree[1]->llink, shapes[3], numbers[3]); // L3
+    tree[4] = tree[1]->rlink = newNode(tree[1]->rlink, shapes[4], numbers[4]);
+    tree[2]->llink           = tree[1]->rlink;
+    tree[5] = tree[2]->rlink = newNode(tree[2]->rlink, shapes[5], numbers[5]);
+    tree[6] = tree[3]->llink = newNode(tree[3]->llink, shapes[6], numbers[6]); // L4
+    tree[7] = tree[3]->rlink = newNode(tree[3]->rlink, shapes[7], numbers[7]);
+    tree[4]->llink           = tree[3]->rlink;
+    tree[8] = tree[4]->rlink = newNode(tree[4]->rlink, shapes[8], numbers[8]);
+    tree[5]->llink           = tree[4]->rlink;
+    tree[9] = tree[5]->rlink = newNode(tree[5]->rlink, shapes[9], numbers[9]); // make tree. Done.
 
 	shuffle();
 
-	deck = (Deck*)malloc(sizeof(Deck));
-	deck->top = 0;
 	for(int i=0;i<NUM_OF_REST_CARDS;i++){
-		push_card(deck, rest_cards[i]);
+		push_card(rest_cards[i]);
 	}
     //print(root);
 }
@@ -129,39 +129,71 @@ void shuffle(){
 }
 
 int hasChild(Node* node){
-	return node->llink != NULL || node->rlink != NULL;
+	return ((node->llink != NULL && node->llink->show != -1) || (node->rlink != NULL && node->rlink->show != -1));
 }
 
-void push_card(Deck* deck, int card){
-	deck->stack[(deck->top)++] = card;
+void push_card(int card){
+	stack[top++] = card;
 }
 
-int pop_card(Deck* deck){
-	if(deck->top == 0) return -1;
-	deck->stack[--(deck->top)] = -1;
+int pop_card(){
+	if(top == 0) return -1;
+	stack[--top] = -1;
 	return 0;
 }
 
 void printCard(Node* node){
-	hasChild(node) ?  printf("■  ") : printf("%s%s   ", ctypes[node->shape], ntypes[node->num]);
+	if(node->show == -1) printf("     ");
+	else (node->show ? printf("%s %s   ", card_shapes[node->shape], card_numbers[node->num]) : printf("■  "));
+}
+
+void checkCanShow(Node* node){
+	node->show = (hasChild(node) ? 0 : 1);
 }
 
 void show_board(){
-	int number; // number that user input;
+	for(int i=0;i<10;i++) if(tree[i]->show != -1) checkCanShow(tree[i]);
+
 	printf("\n   0                    ");
-	printCard(root);
+	printCard(tree[0]);
 	printf("\n  1 2                ");
 	printCard(tree[1]); printCard(tree[2]);
 	printf("\n 3 4 5           ");
 	printCard(tree[3]); printCard(tree[4]); printCard(tree[5]);
 	printf("\n6 7 8 9      ");
 	printCard(tree[6]); printCard(tree[7]); printCard(tree[8]); printCard(tree[9]);
-	printf("\n\n\nYou have (%d) cards.\n", deck->top);
+	printf("\n\n\nYou have (%d) cards.\n", top);
 	printf("=============================================\n");
-	printf("%s%s  ■  ■  ■  ■  ■  ■  ■  ■  ■  ■\n\n", ctypes[deck->stack[deck->top]]);
+	printf("%s %s  ■  ■  ■  ■  ■  ■  ■  ■  ■  ■\n\n", card_shapes[stack[top-1]/13], card_numbers[stack[top-1]%13]);
 	printf("Enter a number[0..9] to remove (-1 = new card) : ");
-	scanf("%d", &number);
-	if(number == -1){
+}
 
+void play(){
+	int number; // number that user input;
+
+	if(scanf("%d", &number) == 0 || number < -1 || number > 9) { // if input is wrong
+		getchar();
+		printf("Wrong input.");
 	}
+	else if(number == -1){ // load other card
+		if(pop_card()) return;
+	}
+	else if(0 <= number && number <= 9){ // operation about remove card
+		if(tree[number]->show == -1) printf("Already removed card. Select other card"); // if card is removed
+		else{
+			if(tree[number]->show == 0) printf("It's not the card that shown."); // if card is not shown
+			else{
+				if((tree[number]->num+12)%13 == stack[top-1]%13 || (tree[number]->num+14)%13 == stack[top-1]%13){ // if card can be removed
+					printf("%s %s is removed.\n", card_shapes[tree[number]->shape], card_numbers[tree[number]->num]);
+					pop_card();
+					push_card((tree[number]->shape)*13 + tree[number]->num);
+					tree[number]->show = -1;
+				}
+				else{
+					printf("You can't remove the card. Select other card.");
+				}
+			}
+		}
+	}
+	printf("\n\n");
 }
