@@ -134,7 +134,7 @@ int pop_card(){
 
 void printCard(Node* node){
 	if(node->show == -1) printf("     ");
-	else (node->show ? printf("%s %s   ", card_shapes[node->shape], card_numbers[node->num]) : printf("■  "));
+	else (node->show ? printf("%s %s   ", card_shapes[node->shape], card_numbers[node->num]) : printf("■     "));
 }
 
 void checkCanShow(Node* node){
