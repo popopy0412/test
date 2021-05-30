@@ -19,25 +19,46 @@ typedef struct Node{
 
 int mark[4][13]; // randomly pick cards
 
-Node* newRoot(){
-	Node* root = (Node*)malloc(sizeof(Node)); // Root node of tree
-	return root;
+void pickCard(Node* node){ // pick card randomly
+    while(1){
+		int sh = rand() % NUM_SHAPE;
+		int no = rand() % CARD_NUM;
+		if(mark[sh][no] == 1) continue;
+		mark[sh][no] = 1;
+		node->shape = sh;
+		node->num = no;
+	}
+    return;
+}
+
+void newNode(Node* node){ // create new node
+	node = (Node*)malloc(sizeof(Node)); // create new node
+    pickCard(node);
+    node->show = 0;
+    node->llink = NULL;
+    node->rlink = NULL;
+}
+
+void addExistNode(Node* node, Node* exist){
+    node = exist;
 }
 
 void init_card(){
-	Node* root = newRoot();
-	
-	for(i=0;i<10;i++){
-		while(1){
-			int sh = rand() % NUM_SHAPE;
-			int no = rand() % CARD_NUM;
-			if(mark[sh][no] == 0){
-				mark[sh][no] = 1;
-				cards[i].num = no;
-				cards[i].shape = sh;
-			}
-		}	
-	}
+	Node* root; // root node of tree
+    newNode(root); // L1
+    newNode(root->llink); // L2
+    newNode(root->rlink);
+	newNode(root->llink->llink); // L3
+    newNode(root->llink->rlink);
+    root->rlink->llink = root->llink->rlink;
+    newNode(root->rlink->rlink);
+    newNode(root->llink->llink->llink); // L4
+    newNode(root->llink->llink->rlink);
+    root->llink->rlink->llink = root->llink->llink->rlink;
+    newNode(root->llink->rlink->rlink);
+    root->rlink->rlink->llink = root->llink->rlink->rlink;
+    newNode(root->rlink->rlink->rlink);
+    
 }
 
 void main(){
@@ -56,4 +77,3 @@ void main(){
 		}
 	}*/
 }
-
