@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#define _CRT_SECURE_NO_WARNINGS
 #define NUM_SHAPE 4
 #define CARD_NUM 13
 #define NUM_OF_CARDS 52
@@ -112,9 +113,9 @@ void shuffle(){
 	for(i=0;i<NUM_OF_REST_CARDS;i++){ // shuffle the rest cards
 		int temp, random_pick = rand()%NUM_OF_REST_CARDS;
 
-		rest_cards[temp] = rest_cards[i];
+		temp = rest_cards[i];
 		rest_cards[i] = rest_cards[random_pick];
-		rest_cards[random_pick] = rest_cards[temp];
+		rest_cards[random_pick] = temp;
 	}
 }
 
