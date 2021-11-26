@@ -5,8 +5,8 @@ import javax.swing.*;
 
 public class TrafficTest extends JFrame{
 
-    public int on = 0; // 어떤 신호등이 켜지는지 나타내는 변수
-    public MyPanel panel = new MyPanel(); // 신호등 패널
+    private int on = 0; // 어떤 신호등이 켜지는지 나타내는 변수
+    private MyPanel panel = new MyPanel(); // 신호등 패널
     public TrafficTest(String title){
         super(title); // 제목 설정
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 조건 설정

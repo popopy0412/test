@@ -3,7 +3,7 @@ import javax.swing.*;
 
 public class DrawFillTest extends JFrame{
 
-    public int X, Y; // 너비와 높이
+    private int X, Y; // 너비와 높이
     public DrawFillTest(String title){
         super(title); // 제목 설정
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 조건 설정

@@ -6,10 +6,10 @@ import javax.swing.*;
 
 public class MouseCircle extends JFrame{
 
-    public Vector<Circle> v = new Vector<>();
-    public int x1, y1, x2, y2; // 시작 좌표, 끝 좌표
-    public MyPanel panel = new MyPanel(); // 원을 그릴 패널
-    public Container c; // ContentPane
+    private Vector<Circle> v = new Vector<>(); // 원들의 정보가 들어갈 벡터
+    private int x1, y1, x2, y2; // 시작 좌표, 끝 좌표
+    private MyPanel panel = new MyPanel(); // 원을 그릴 패널
+    private Container c; // ContentPane
     public MouseCircle(String title){
         super(title); // 제목 설정
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 조건 설정
