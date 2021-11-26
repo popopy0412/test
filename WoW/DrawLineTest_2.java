@@ -27,6 +27,6 @@ public class DrawLineTest_2 extends JFrame{
         }
     }
     public static void main(String[] args){
-        DrawLineTest_2 frame = new DrawLineTest_2("격자 그리기"); // 프레임 생성
+        DrawLineTest_2 frame = new DrawLineTest_2(" 그리기"); // 프레임 생성
     }
 }
